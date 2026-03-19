@@ -212,3 +212,5 @@ data/*
 /AAPL_featuress.csv
 model
 evaluation
+scaler
+model
