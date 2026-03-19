@@ -5,31 +5,37 @@ stages:
     deps:
     - path: src/components/data_ingestion.py
       hash: md5
-      md5: d02cf5862b9d9d6a11b3342ceb5e3bd1
-      size: 2819
+      md5: 1471ab86ae7f55e4a6aedd2186351c8c
+      size: 3554
+    params:
+      params.yaml:
+        data_ingestion.splitting_ratio: 0.8
     outs:
     - path: data/raw
       hash: md5
-      md5: 242eb7a7264ae1192cd6825ff1beef3d.dir
-      size: 23896
+      md5: 038d3f4413e3492ea8fd67cbb1d33ec3.dir
+      size: 23202
       nfiles: 2
   data_transformation:
     cmd: python src/components/data_transformation.py
     deps:
     - path: data/raw
       hash: md5
-      md5: 242eb7a7264ae1192cd6825ff1beef3d.dir
-      size: 23896
+      md5: 038d3f4413e3492ea8fd67cbb1d33ec3.dir
+      size: 23202
       nfiles: 2
     - path: src/components/data_transformation.py
       hash: md5
-      md5: bc24f0adb8e2abed3192d00c0e9060ba
-      size: 4176
+      md5: 95833288383ac4e08217ef9e732d944a
+      size: 4830
+    params:
+      params.yaml:
+        data_transformation.n_steps: 30
     outs:
     - path: data/transformed
       hash: md5
-      md5: 2eaf3d04e3d453a3c7f8169a1977a889.dir
-      size: 106792
+      md5: 9a61a4d4c8eaae97068db5e8e9e5cc23.dir
+      size: 102623
       nfiles: 4
   model_training:
     cmd: python src/components/model_training.py

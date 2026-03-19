@@ -27,6 +27,23 @@ file_handler.setFormatter(formatter)
 logger.addHandler(console_handler)
 logger.addHandler(file_handler)
 
+def load_params(params_path:str)->dict:
+    """Load parameters from yaml file"""
+    try:
+        with open(params_path, 'r') as f:
+            params = yaml.safe_load(f)
+        logger.debug("Parameters retrieved from yaml file")
+        return params
+    except FileNotFoundError as e:
+        logger.error(f"file not found:{e}")
+        raise
+    except yaml.YAMLError as e:
+        logger.error(f"YAML error:{e}")
+        raise
+    except Exception as e:
+        logger.error(f"unknown error occured while loading params file: {e}")
+        raise
+
 def load_data(data_path:str)->pd.DataFrame:
     """Load data from a csv file."""
     try:
@@ -54,10 +71,10 @@ def preprocess_data(df:pd.DataFrame)->pd.DataFrame:
 
 def save_preprocessed_data(train_data:pd.DataFrame,test_data:pd.DataFrame,data_path:str)->None:
     try:
-        raw_data_dir = os.path.join(data_path, 'raw')
-        os.makedirs(raw_data_dir, exist_ok=True)
-        train_data.to_csv(os.path.join(raw_data_dir, 'train_data.csv'), index=False)
-        test_data.to_csv(os.path.join(raw_data_dir, 'test_data.csv'), index=False)
+        processed_data_dir = os.path.join(data_path, 'raw')
+        os.makedirs(processed_data_dir, exist_ok=True)
+        train_data.to_csv(os.path.join(processed_data_dir, 'train_data.csv'), index=False)
+        test_data.to_csv(os.path.join(processed_data_dir, 'test_data.csv'), index=False)
         logger.debug("Successfully saved the preprocessed data.")
     except Exception as e:
         logger.error(f"An error occurred while saving the preprocessed data: {e}")
@@ -65,11 +82,13 @@ def save_preprocessed_data(train_data:pd.DataFrame,test_data:pd.DataFrame,data_p
 
 def main():
     try:
-        base_path = r"C:\Users\DELL\OneDrive\Desktop\Documents\dataaaa"
+        base_path = r"C:\Users\DELL\AAPL-stock-prediction-model\data"
         data_path = os.path.join(base_path, "AAPL_featuress.csv")
+        params = load_params("params.yaml")
         df = load_data(data_path)
         final_df = preprocess_data(df)
-        split_idx = int(0.8 * len(df))
+        splitting_ratio = params['data_ingestion']['splitting_ratio'] #hyperparamater
+        split_idx = int(splitting_ratio * len(df))
 
         train_data = final_df[:split_idx]
         test_data = final_df[split_idx:]

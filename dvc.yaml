@@ -3,6 +3,8 @@ stages:
     cmd: python src/components/data_ingestion.py
     deps:
     - src/components/data_ingestion.py
+    params:
+    - data_ingestion.splitting_ratio
     outs:
     - data/raw
 
@@ -11,6 +13,8 @@ stages:
     deps:
     - data/raw
     - src/components/data_transformation.py
+    params:
+    - data_transformation.n_steps
     outs:
     - data/transformed
   
@@ -19,6 +23,16 @@ stages:
     deps:
     - data/transformed
     - src/components/model_training.py
+    params:
+    - model_training.lstm_units
+    - model_training.dropout_ratio
+    - model_training.dense_units
+    - model_training.learning_rate
+    - model_training.epochs
+    - model_training.batch_size
+    - model_training.patience
+    - model_training.optimizer
+    - model_training.model_config
     outs:
     - models/model/lstm_model.h5
 

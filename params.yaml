@@ -1,0 +1,20 @@
+data_ingestion:
+  splitting_ratio: 0.8
+
+data_transformation:
+  n_steps: 30
+
+model_training:
+  lstm_units: 64
+  dropout_ratio: 0.2
+  dense_units: 32
+  learning_rate: 0.001
+  epochs: 100
+  batch_size: 32
+  patience: 20
+  beta_1: 0.9
+  beta_2: 0.999
+  epsilon: 1e-07
+  clipnorm: 1.0
+  activation: 'relu'
+  loss: 'mse'

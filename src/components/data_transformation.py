@@ -26,6 +26,24 @@ file_handler.setFormatter(formatter)
 logger.addHandler(console_handler)
 logger.addHandler(file_handler)
 
+def load_params(params_path:str)->dict:
+    """Load parameters from yaml file"""
+    try:
+        with open(params_path, 'r') as f:
+            params = yaml.safe_load(f)
+        logger.debug("Parameters retrieved from yaml file")
+        return params
+    except FileNotFoundError as e:
+        logger.error(f"file not found:{e}")
+        raise
+    except yaml.YAMLError as e:
+        logger.error(f"YAML error:{e}")
+        raise
+    except Exception as e:
+        logger.error(f"unknown error occured while loading params file: {e}")
+        raise
+
+
 def scaling_data(train_data:pd.DataFrame,test_data:pd.DataFrame)->tuple:
     """Scale the data using MinMaxScaler."""
     try:
@@ -57,8 +75,8 @@ def create_sequences(data:pd.DataFrame,n_steps:int)->tuple:
         for i in range(len(data)-n_steps):
             X.append(data[i:i+n_steps])
             y.append(data[i+n_steps])
-        return np.array(X),np.array(y)
         logger.debug("Sequences created successfully.")
+        return np.array(X),np.array(y)
     except Exception as e:
         logger.error(f"An error occured while creating sequences:{e}")
         raise
@@ -86,11 +104,12 @@ def main():
     try:
         df_train = pd.read_csv("./data/raw/train_data.csv")
         df_test = pd.read_csv("./data/raw/test_data.csv")
+        params = load_params("params.yaml")
         logger.debug("Successfully loaded the preprocessed data.")
         train_scaled, test_scaled,scaler = scaling_data(df_train[['close']], df_test[['close']])
         save_scaler(scaler, "./model/scaler/scaler.pkl")
         #hyperparamater 
-        n_steps = 30
+        n_steps = params['data_transformation']['n_steps']
         X_train, y_train = create_sequences(train_scaled, n_steps)
         X_test, y_test = create_sequences(test_scaled, n_steps)
         save_data(X_train, y_train, X_test, y_test, "./data")
