@@ -1,0 +1,32 @@
+stages:
+  data_ingestion:
+    cmd: python src/components/data_ingestion.py
+    deps:
+    - src/components/data_ingestion.py
+    outs:
+    - data/processed
+
+  data_transformation:
+    cmd: python src/components/data_transformation.py
+    deps:
+    - data/processed
+    - src/components/data_transformation.py
+    outs:
+    - data/transformed
+  
+  model_training:
+    cmd: python src/model_training.py
+    deps:
+    - data/transformed
+    - src/components/model_training.py
+    outs:
+    - model/model/lstm_model.h5
+
+  model_evaluation:
+    cmd: python src/components/model_evaluation.py
+    deps:
+    - model/model/lstm_model.h5
+    - data/transformed
+    - src/components/model_evaluation.py
+    outs:
+    - evaluation/metrics.json

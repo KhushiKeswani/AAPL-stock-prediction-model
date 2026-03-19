@@ -84,12 +84,12 @@ def save_data(X_train:np.array,y_train:np.array,X_test:np.array,y_test:np.array,
 def main():
     """Main function to execute the data transformation steps."""
     try:
-        df_train = pd.read_csv("./data/processed/train_data.csv")
-        df_test = pd.read_csv("./data/processed/test_data.csv")
+        df_train = pd.read_csv("./data/raw/train_data.csv")
+        df_test = pd.read_csv("./data/raw/test_data.csv")
         logger.debug("Successfully loaded the preprocessed data.")
         train_scaled, test_scaled,scaler = scaling_data(df_train[['close']], df_test[['close']])
         save_scaler(scaler, "./model/scaler/scaler.pkl")
-        #hyperparamater
+        #hyperparamater 
         n_steps = 30
         X_train, y_train = create_sequences(train_scaled, n_steps)
         X_test, y_test = create_sequences(test_scaled, n_steps)
