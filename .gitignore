@@ -210,5 +210,5 @@ data/*
 !data/raw/
 !data/raw/*.dvc
 /AAPL_featuress.csv
-models
+model
 evaluation

@@ -15,7 +15,7 @@ stages:
     - data/transformed
   
   model_training:
-    cmd: python src/model_training.py
+    cmd: python src/components/model_training.py
     deps:
     - data/transformed
     - src/components/model_training.py

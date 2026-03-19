@@ -1,0 +1,71 @@
+schema: '2.0'
+stages:
+  data_ingestion:
+    cmd: python src/components/data_ingestion.py
+    deps:
+    - path: src/components/data_ingestion.py
+      hash: md5
+      md5: d02cf5862b9d9d6a11b3342ceb5e3bd1
+      size: 2819
+    outs:
+    - path: data/raw
+      hash: md5
+      md5: 242eb7a7264ae1192cd6825ff1beef3d.dir
+      size: 23896
+      nfiles: 2
+  data_transformation:
+    cmd: python src/components/data_transformation.py
+    deps:
+    - path: data/raw
+      hash: md5
+      md5: 242eb7a7264ae1192cd6825ff1beef3d.dir
+      size: 23896
+      nfiles: 2
+    - path: src/components/data_transformation.py
+      hash: md5
+      md5: bc24f0adb8e2abed3192d00c0e9060ba
+      size: 4176
+    outs:
+    - path: data/transformed
+      hash: md5
+      md5: 2eaf3d04e3d453a3c7f8169a1977a889.dir
+      size: 106792
+      nfiles: 4
+  model_training:
+    cmd: python src/components/model_training.py
+    deps:
+    - path: data/transformed
+      hash: md5
+      md5: 2eaf3d04e3d453a3c7f8169a1977a889.dir
+      size: 106792
+      nfiles: 4
+    - path: src/components/model_training.py
+      hash: md5
+      md5: 013db32d5a07b21764e03541243ec52e
+      size: 4109
+    outs:
+    - path: model/model/lstm_model.h5
+      hash: md5
+      md5: faefe681af5523b2075ec254d37f1fa1
+      size: 270768
+  model_evaluation:
+    cmd: python src/components/model_evaluation.py
+    deps:
+    - path: data/transformed
+      hash: md5
+      md5: 2eaf3d04e3d453a3c7f8169a1977a889.dir
+      size: 106792
+      nfiles: 4
+    - path: model/model/lstm_model.h5
+      hash: md5
+      md5: faefe681af5523b2075ec254d37f1fa1
+      size: 270768
+    - path: src/components/model_evaluation.py
+      hash: md5
+      md5: 8179e68d5b0f8e6c231818b57a2a0b04
+      size: 4747
+    outs:
+    - path: evaluation/metrics.json
+      hash: md5
+      md5: 2d870c59e216294708a6877d5ea5e2d5
+      size: 97
