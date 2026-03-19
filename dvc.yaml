@@ -4,12 +4,12 @@ stages:
     deps:
     - src/components/data_ingestion.py
     outs:
-    - data/processed
+    - data/raw
 
   data_transformation:
     cmd: python src/components/data_transformation.py
     deps:
-    - data/processed
+    - data/raw
     - src/components/data_transformation.py
     outs:
     - data/transformed
