@@ -117,12 +117,12 @@ def save_metrics(metrics: dict, file_path: str) -> None:
 def main():
     """main function for evaluating the model"""
     try:
-        model = load_model("./model/model/lstm_model.h5")
+        model = load_model("./models/model/lstm_model.h5")
         logger.debug("loaded model into this file")
         X_test = load_data("./data/transformed/X_test.csv")
         y_test = load_data("./data/transformed/y_test.csv")
         logger.debug("loaded test data into this file")
-        scaler = load_scaler("./model/scaler/scaler.pkl")
+        scaler = load_scaler("./models/scaler/scaler.pkl")
         logger.debug("loaded scaler successfully")
         metrics = evaluate_model(model,X_test,y_test,scaler)
         logger.debug("evaluated the model successfully")

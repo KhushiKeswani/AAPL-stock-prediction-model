@@ -20,12 +20,12 @@ stages:
     - data/transformed
     - src/components/model_training.py
     outs:
-    - model/model/lstm_model.h5
+    - models/model/lstm_model.h5
 
   model_evaluation:
     cmd: python src/components/model_evaluation.py
     deps:
-    - model/model/lstm_model.h5
+    - models/model/lstm_model.h5
     - data/transformed
     - src/components/model_evaluation.py
     outs:

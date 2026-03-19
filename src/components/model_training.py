@@ -74,7 +74,7 @@ def build_model(X_train:np.array,y_train:np.array,X_test:np.array,y_test:np.arra
 def save_model(model:Sequential,model_path:str)->None:
     """Save the trained model to a file."""
     try:
-        model_dir = os.path.join(model_path, 'model')
+        model_dir = os.path.join(model_path, 'models')
         os.makedirs(model_dir, exist_ok=True)
         model.save(os.path.join(model_dir, 'lstm_model.h5'))
         logger.debug("Model saved successfully.")
