@@ -16,5 +16,5 @@ model_training:
   beta_2: 0.999
   epsilon: 1e-07
   clipnorm: 1.0
-  activation: 'relu'
-  loss: 'mse'
+  activation: relu
+  loss: mse

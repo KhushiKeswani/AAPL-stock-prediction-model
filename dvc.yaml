@@ -31,8 +31,12 @@ stages:
     - model_training.epochs
     - model_training.batch_size
     - model_training.patience
-    - model_training.optimizer
-    - model_training.model_config
+    - model_training.beta_1
+    - model_training.beta_2
+    - model_training.epsilon
+    - model_training.clipnorm
+    - model_training.activation
+    - model_training.loss
     outs:
     - models/model/lstm_model.h5
 

@@ -108,10 +108,14 @@ def main():
         logger.debug("Successfully loaded the preprocessed data.")
         train_scaled, test_scaled,scaler = scaling_data(df_train[['close']], df_test[['close']])
         save_scaler(scaler, "./model/scaler/scaler.pkl")
+        train_scaled = train_scaled.flatten()
+        test_scaled = test_scaled.flatten()
         #hyperparamater 
         n_steps = params['data_transformation']['n_steps']
         X_train, y_train = create_sequences(train_scaled, n_steps)
         X_test, y_test = create_sequences(test_scaled, n_steps)
+        X_train = X_train.reshape(X_train.shape[0], X_train.shape[1])
+        X_test = X_test.reshape(X_test.shape[0], X_test.shape[1])
         save_data(X_train, y_train, X_test, y_test, "./data")
         logger.debug("Data transformation completed successfully.")
     except Exception as e:
@@ -120,3 +124,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+        

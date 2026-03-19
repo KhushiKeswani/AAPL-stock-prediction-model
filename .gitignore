@@ -209,6 +209,7 @@ __marimo__/
 data/*
 !data/raw/
 !data/raw/*.dvc
+data
 /AAPL_featuress.csv
 model
 evaluation

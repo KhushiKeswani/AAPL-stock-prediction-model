@@ -49,7 +49,9 @@ def load_params(params_path:str)->dict:
 def load_data(file_path:str)->np.array:
     """Load the transformed data from files."""
     try:
-        data = pd.read_csv(file_path).values
+        data = pd.read_csv(file_path)
+        data = data.apply(pd.to_numeric, errors='coerce')
+        data = data.values.astype(np.float32)
         logger.debug("Transformed data loaded successfully.")
         return data
     except pd.errors.ParserError as e:
@@ -59,7 +61,7 @@ def load_data(file_path:str)->np.array:
         logger.error(f"An error occurred while loading the transformed data: {e}")
         raise
 
-def build_model(X_train: np.array, y_train:np.array, X_test:np.array, y_test:np.array, params):
+def build_model(X_train,y_train,X_test,y_test,params):
     """Build and compile LSTM model"""
     try:
         lstm_units = params["model_training"]["lstm_units"]
@@ -95,10 +97,10 @@ def build_model(X_train: np.array, y_train:np.array, X_test:np.array, y_test:np.
         ])
 
         opt = Adam(
-            learning_rate=lr,
-            beta_1=beta_1,
-            beta_2=beta_2,
-            epsilon=epsilon,
+            learning_rate=float(lr),
+            beta_1=float(beta_1),
+            beta_2=float(beta_2),
+            epsilon=float(epsilon),
             clipnorm=clipnorm
         )
 
@@ -121,7 +123,7 @@ def build_model(X_train: np.array, y_train:np.array, X_test:np.array, y_test:np.
 def save_model(model:Sequential,model_path:str)->None:
     """Save the trained model to a file."""
     try:
-        model_dir = os.path.join(model_path, 'models')
+        model_dir = os.path.join(model_path, 'model')
         os.makedirs(model_dir, exist_ok=True)
         model.save(os.path.join(model_dir, 'lstm_model.h5'))
         logger.debug("Model saved successfully.")
@@ -132,16 +134,16 @@ def save_model(model:Sequential,model_path:str)->None:
 def main():
     """Main function to execute the model training steps."""
     try:
-        params = load_params("params.yaml")
         X_train = load_data("./data/transformed/X_train.csv")
         y_train = load_data("./data/transformed/y_train.csv")
         X_test = load_data("./data/transformed/X_test.csv")
         y_test = load_data("./data/transformed/y_test.csv")
+        params = load_params("params.yaml")
         logger.debug("Successfully loaded the transformed data for training.")
         X_train = X_train.reshape(X_train.shape[0], 30, 1)
         X_test = X_test.reshape(X_test.shape[0], 30, 1)
         model = build_model(X_train,y_train,X_test,y_test,params)
-        save_model(model, "./model")
+        save_model(model, "./models")
         logger.debug("Model training process completed successfully.")
     except Exception as e:
         logger.error(f"failed to train and save the model: {e}")
